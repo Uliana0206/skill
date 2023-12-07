@@ -1,21 +1,25 @@
 import React, {useEffect, useState} from "react";
-import { Text, View, SafeAreaView, TouchableOpacity } from "react-native";
+import { Text, View, SafeAreaView, TouchableOpacity, Image} from "react-native";
 import {firebase} from '../firebase';
-import { gStyle } from "../Styles";
+import { gStyle } from "../gStyles";
 
 
 const HomeScreen = ({ navigation }) => {
     const [name, setName] = useState([]);
 
-    const ListingSc = () => {
+    const ListingScreen = () => {
         navigation.navigate('ListingScreen')   
     };
-    const New = () => {
-        navigation.navigate('New')   
-    }
+
+    const progressScreen = () => {
+        navigation.navigate('ProgressScreen')   
+    };
+    const Ballans = () => {
+        navigation.navigate('Ballans')   
+    };
 
     useEffect(() => {
-        firebase.firestore().collection("users")
+        firebase.firestore().collection("user")
         .doc(firebase.auth().currentUser.uid).get()
         .then((snapshot) => {
             if(snapshot.exists){
@@ -29,23 +33,34 @@ const HomeScreen = ({ navigation }) => {
 
     return (
         <SafeAreaView style={gStyle.main}>
-            <Text>{name.email}</Text>
-            <Text style={{fontSize:20, fontWeight:"bold", color:'#3562FF'}}>
-                {name.firsName}
+            <Image source={require('../assets/iconka.png')} style={{marginHorizontal:"20%"}}/>
+            <Text style={{textAlign:"center"}}>
+                {name.firsName}{name.lastName}
             </Text>
+            <Text style={{textAlign:"center"}}>{name.email}</Text>
+            <View style={{marginTop:40}}>
 
-            <View style={gStyle.button3}>
-                <Text onPress={ListingSc} style={{color: "#ffffff", textAlign: 'center', fontSize:18 }}>Листинг задач</Text>
-            </View>
-            <View style={gStyle.button3}>
-                <Text onPress={New} style={{color: "#ffffff", textAlign: 'center', fontSize:18 }}>Создать задачу</Text>
             </View>
 
-            <TouchableOpacity 
+            <TouchableOpacity onPress={ListingScreen}>
+            <View style={gStyle.button}>
+                <Text style={gStyle.textbutton1}>Листинг задач</Text>
+            </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={progressScreen}>
+                <View style={gStyle.button}>
+                    <Text style={gStyle.textbutton1}>Достижения</Text>
+                </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={Ballans}>
+                <View style={gStyle.button}>
+                    <Text style={gStyle.textbutton1}>Баланс</Text>
+                </View>
+            </TouchableOpacity>
+            <TouchableOpacity
                 onPress={() => {firebase.auth().signOut()}}
-                    style={gStyle.button}
                 >
-                    <Text style={{fontSize:22, fontWeight:'bold', color:'#ffffff', textAlign:"center"}}>Выход</Text>
+                    <Text style={{marginTop: '50%', textAlign:"center", color:'#6750A4'}}>Выйти из аккаунта</Text>
             </TouchableOpacity>
         </SafeAreaView>
     )
